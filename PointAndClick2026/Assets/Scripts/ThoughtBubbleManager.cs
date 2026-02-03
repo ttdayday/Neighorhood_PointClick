@@ -34,7 +34,11 @@ public class ThoughtBubbleManager : MonoBehaviour
     [Tooltip("Duration of fade in/out animations")]
     public float fadeDuration = 0.3f;
 
+    [Tooltip("Auto-hide after displayDuration? If false, bubble stays visible until manually hidden.")]
+    public bool autoHide = false;
+
     private Coroutine activeCoroutine;
+    private bool isVisible = false;
 
     void Awake()
     {
@@ -58,7 +62,18 @@ public class ThoughtBubbleManager : MonoBehaviour
             }
         }
 
+        // Preserve aspect ratio for icons
+        if (iconImage != null)
+        {
+            iconImage.preserveAspect = true;
+        }
+
         HideBubble();
+    }
+
+    public bool IsVisible()
+    {
+        return isVisible;
     }
 
     public void ShowThought(Sprite iconSprite)
@@ -77,20 +92,41 @@ public class ThoughtBubbleManager : MonoBehaviour
         activeCoroutine = StartCoroutine(ShowThoughtCoroutine(iconSprite));
     }
 
+    public void HideThought()
+    {
+        if (activeCoroutine != null)
+        {
+            StopCoroutine(activeCoroutine);
+        }
+
+        activeCoroutine = StartCoroutine(HideThoughtCoroutine());
+    }
+
     private IEnumerator ShowThoughtCoroutine(Sprite iconSprite)
     {
         iconImage.sprite = iconSprite;
 
-        bubbleImage.gameObject.SetActive(true);
-        iconImage.gameObject.SetActive(true);
+        bubbleImage.enabled = true;
+        iconImage.enabled = true;
 
         yield return StartCoroutine(FadeIn());
 
-        yield return new WaitForSeconds(displayDuration);
+        isVisible = true;
 
+        if (autoHide)
+        {
+            yield return new WaitForSeconds(displayDuration);
+            yield return StartCoroutine(FadeOut());
+            HideBubble();
+            isVisible = false;
+        }
+    }
+
+    private IEnumerator HideThoughtCoroutine()
+    {
         yield return StartCoroutine(FadeOut());
-
         HideBubble();
+        isVisible = false;
     }
 
     private IEnumerator FadeIn()
@@ -124,8 +160,8 @@ public class ThoughtBubbleManager : MonoBehaviour
     private void HideBubble()
     {
         canvasGroup.alpha = 0f;
-        bubbleImage.gameObject.SetActive(false);
-        iconImage.gameObject.SetActive(false);
+        bubbleImage.enabled = false;
+        iconImage.enabled = false;
     }
 
     void OnDestroy()

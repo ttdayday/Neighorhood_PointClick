@@ -84,9 +84,17 @@ public class ClickDetector : MonoBehaviour
                 }
             }
         }
-        else if (debugMode)
+        else
         {
-            Debug.Log("No object clicked");
+            if (debugMode)
+            {
+                Debug.Log("No object clicked");
+            }
+
+            if (ThoughtBubbleManager.Instance != null && ThoughtBubbleManager.Instance.IsVisible())
+            {
+                ThoughtBubbleManager.Instance.HideThought();
+            }
         }
     }
 
