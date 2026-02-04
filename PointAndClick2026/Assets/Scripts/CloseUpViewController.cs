@@ -35,6 +35,7 @@ public class CloseUpViewController : MonoBehaviour
 
     private bool isVisible = false;
     private Coroutine activeCoroutine;
+    private Sprite currentSprite = null;
 
     void Awake()
     {
@@ -46,10 +47,7 @@ public class CloseUpViewController : MonoBehaviour
         }
 
         instance = this;
-    }
 
-    void Start()
-    {
         // Make sure we have a CanvasGroup
         if (canvasGroup == null)
         {
@@ -60,8 +58,17 @@ public class CloseUpViewController : MonoBehaviour
             }
         }
 
-        // Start hidden
+        // IMPORTANT: Hide immediately in Awake to prevent it from showing on startup
         HideImmediate();
+    }
+
+    void Start()
+    {
+        // Double-check it's hidden (in case something enabled it between Awake and Start)
+        if (isVisible)
+        {
+            HideImmediate();
+        }
     }
 
     /// <summary>
@@ -70,6 +77,14 @@ public class CloseUpViewController : MonoBehaviour
     public bool IsVisible()
     {
         return isVisible;
+    }
+
+    /// <summary>
+    /// Check if a specific close-up is currently showing
+    /// </summary>
+    public bool IsShowingCloseUp(string spriteName)
+    {
+        return isVisible && currentSprite != null && currentSprite.name == spriteName;
     }
 
     /// <summary>
@@ -100,6 +115,7 @@ public class CloseUpViewController : MonoBehaviour
         // Set the sprite and show
         closeUpImage.sprite = detailedSprite;
         closeUpImage.enabled = true;
+        currentSprite = detailedSprite;
 
         activeCoroutine = StartCoroutine(FadeIn());
     }
@@ -156,6 +172,7 @@ public class CloseUpViewController : MonoBehaviour
             closeUpImage.enabled = false;
         }
         isVisible = false;
+        currentSprite = null;
     }
 
     void OnDestroy()
