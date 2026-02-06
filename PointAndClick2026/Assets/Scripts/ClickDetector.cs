@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -60,21 +61,13 @@ public class ClickDetector : MonoBehaviour
 
             onObjectClicked?.Invoke(clickedObject);
 
-            IInteractable interactable = clickedObject.GetComponent<IInteractable>();
+            // Try InteractableObject first (most common)
+            InteractableObject interactable = clickedObject.GetComponent<InteractableObject>();
             if (interactable != null)
             {
-                InteractableObject interactableObj = clickedObject.GetComponent<InteractableObject>();
-                if (interactableObj != null)
-                {
-                    Debug.Log($"[DEBUG] Clicked on interactable: {interactableObj.objectName}");
-                }
-                else
-                {
-                    Debug.Log($"[DEBUG] Clicked on interactable: {clickedObject.name}");
-                }
-
                 interactable.OnInteract();
             }
+            // Fallback to IClickable interface
             else
             {
                 IClickable clickable = clickedObject.GetComponent<IClickable>();
@@ -84,17 +77,9 @@ public class ClickDetector : MonoBehaviour
                 }
             }
         }
-        else
+        else if (debugMode)
         {
-            if (debugMode)
-            {
-                Debug.Log("No object clicked");
-            }
-
-            if (ThoughtBubbleManager.Instance != null && ThoughtBubbleManager.Instance.IsVisible())
-            {
-                ThoughtBubbleManager.Instance.HideThought();
-            }
+            Debug.Log("No object clicked");
         }
     }
 

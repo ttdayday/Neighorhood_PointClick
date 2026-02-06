@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6e10dc08d7bbe94dbce8fb26206962e, type: 3}
+  m_Name: FlowerpotCloseUp
+  m_EditorClassIdentifier: Assembly-CSharp::CloseUpData
+  closeUpId: flowerpot_main
+  closeUpSprite: {fileID: 4975018071048589112, guid: 8419899b41d730841a064bfc29850422, type: 3}
+  hotspots:
+  - hotspotId: FlowerPotTag
+    normalizedPosition: {x: 0.43, y: 0.455}
+    normalizedSize: {x: 0.08, y: 0.08}
+    type: 0
+    targetCloseUp: {fileID: 11400000, guid: d11dfd98448c08041a526310bd15d7cb, type: 2}
+  description: 

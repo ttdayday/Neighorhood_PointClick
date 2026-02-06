@@ -33,10 +33,10 @@ public class ZoomOutButton : MonoBehaviour
 
     void Update()
     {
-        // Show button only when close-up view is visible
-        if (CloseUpViewController.Instance != null)
+        // Show button only when in close-up view (using navigation stack)
+        if (HotspotManager.Instance != null)
         {
-            bool isInCloseUp = CloseUpViewController.Instance.IsVisible();
+            bool isInCloseUp = HotspotManager.Instance.IsInCloseUp();
 
             if (isInCloseUp && canvasGroup.alpha < 1f)
             {
@@ -51,9 +51,10 @@ public class ZoomOutButton : MonoBehaviour
 
     private void OnZoomOutClicked()
     {
-        if (CloseUpViewController.Instance != null)
+        // Use navigation stack to go back to previous view
+        if (HotspotManager.Instance != null)
         {
-            CloseUpViewController.Instance.HideCloseUp();
+            HotspotManager.Instance.GoBack();
         }
     }
 
